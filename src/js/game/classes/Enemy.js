@@ -5,6 +5,7 @@ Enemy = function(game) {
     this.hitPoints = 100;
     this.count = 0;
     this.timeCheck = game.time.now;
+    this.bulletTime = 0;
 
 };
 
@@ -13,10 +14,21 @@ Enemy.prototype = {
     preload: function() {
 
         game.load.image('enemy', 'src/assets/sprites/enemy.png');
+        game.load.image('enemyBullet', 'src/assets/sprites/enemyBullet.png');
 
     },
 
     create: function() {
+
+        // Create a group for the bullets
+        this.bullets = game.add.group();
+        this.bullets.enableBody = true;
+        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bullets.createMultiple(30, 'enemyBullet');
+        this.bullets.setAll('anchor.x', 0.5);
+        this.bullets.setAll('anchor.y', 1);
+        this.bullets.setAll('outOfBoundsKill', true);
+        this.bullets.setAll('checkWorldBounds', true);
 
         // Add enemy sprite
         this.sprite = game.add.sprite(900, 392, 'enemy');
@@ -77,6 +89,30 @@ Enemy.prototype = {
             this.count++;
         }
 
+        if (this.count >= 90 && this.count < 200) {
+            this.shoot();
+            this.count++;
+        }
+
+    },
+
+    shoot: function() {
+        if (game.time.now > this.bulletTime) {
+            this.bullet = this.bullets.getFirstExists(false);
+
+            if (this.bullet) {
+                this.bullet.reset(this.sprite.x + this.sprite.width/2, this.sprite.y + this.sprite.height/2);
+                this.bullet.body.velocity.x = -400;
+                this.bulletTime = game.time.now + 200;
+            }
+        }
+    },
+
+
+    die: function() {
+        this.sprite.kill();
+        this.healthbarBg.kill();
+        this.healthbar.kill();
     },
 
 };

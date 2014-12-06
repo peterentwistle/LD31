@@ -63,7 +63,7 @@ Player.prototype = {
         if (game.input.activePointer.isDown) {
             this.shoot();
         }
-        
+
         this.healthbar.x = this.sprite.x;
         this.healthbarBg.x = this.sprite.x;
         this.healthbar.width = (this.hitPoints / 100) * this.healthbarWidth;
@@ -89,6 +89,7 @@ Player.prototype = {
     },
 
     shoot: function() {
+
         if (game.time.now > this.bulletTime) {
             this.bullet = this.bullets.getFirstExists(false);
 
@@ -98,6 +99,14 @@ Player.prototype = {
                 this.bulletTime = game.time.now + 200;
             }
         }
+
+    },
+
+
+    die: function() {
+        this.sprite.kill();
+        this.healthbarBg.kill();
+        this.healthbar.kill();
     },
 
 };

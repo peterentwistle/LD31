@@ -27,6 +27,12 @@ var mainState = {
         game.physics.arcade.collide(player.sprite, rt1.sprite, this.playerCollidesWithTower);
         game.physics.arcade.collide(player.sprite, rt2.sprite, this.playerCollidesWithTower);
 
+        // Bullet hit enemy
+        game.physics.arcade.overlap(player.bullets, enemy.sprite, this.bulletHitEnemy);
+
+        // Bullet hit player
+        game.physics.arcade.overlap(enemy.bullets, player.sprite, this.bulletHitPlayer);
+
         enemy.update();
     },
 
@@ -35,15 +41,35 @@ var mainState = {
         // disable movement right
         player.mvRight = false;
 
-        if (player.hitPoints > 0) {
-            player.hitPoints -= 10;
-        }
-
     },
 
     playerCollidesWithTower: function() {
 
         player.mvRight = false;
     },
+
+    bulletHitEnemy: function() {
+
+        player.bullets.getFirstAlive().kill();
+
+        if (enemy.hitPoints > 0) {
+            enemy.hitPoints -= 2;
+        } else {
+            // Kill enemy
+            enemy.die();
+        }
+    },
+
+    bulletHitPlayer: function() {
+
+        enemy.bullets.getFirstAlive().kill();
+
+        if (player.hitPoints > 0) {
+            player.hitPoints -= 2;
+        } else {
+            // Kill enemy
+            player.die();
+        }
+    }
 
 };
