@@ -7,9 +7,25 @@ var loadState = {
         game.stage.backgroundColor = '#3399FF';
 
         // Preload all game assets
+        player = new Player(game);
+        player.preload();
+
+        enemy = new Enemy(game);
+        enemy.preload();
+
+        bt1 = new Tower(game, 'blue', 1);
+        bt1.preload();
+
+        bt2 = new Tower(game, 'blue', 2);
+        bt2.preload();
+
+        rt1 = new Tower(game, 'red', 1);
+        rt1.preload();
+
+        rt2 = new Tower(game, 'red', 2);
+        rt2.preload();
 
         game.load.image('test', 'src/assets/sprites/test.png');
-        game.load.image('player', 'src/assets/sprites/player.png');
     },
 
     create: function() {
