@@ -1,6 +1,9 @@
 var mainState = {
 
     create: function() {
+
+        this.background = game.add.tileSprite(0, 0, 1000, 560, 'bg');
+
         // Set up physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 

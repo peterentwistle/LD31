@@ -2,6 +2,7 @@ var loadState = {
 
     preload: function() {
 
+        game.load.image('bg', 'src/assets/sprites/bg.png');
 
         // Set background colour
         game.stage.backgroundColor = '#3399FF';
