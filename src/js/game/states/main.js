@@ -46,6 +46,10 @@ var mainState = {
         game.physics.arcade.overlap(enemy.bullets, bt2.sprite, this.bulletHitPlayerTower);
 
         enemy.update();
+        bt1.update();
+        bt2.update();
+        rt1.update();
+        rt2.update();
     },
 
     playerCollidesWithEnemy: function() {
