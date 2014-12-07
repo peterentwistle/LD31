@@ -13,6 +13,12 @@ var loadState = {
 
         this.load.setPreloadSprite(this.preloadBar);
 
+        // Add loading text
+        var fontStyle = {font: "45px Arial", fill: "#ffffff"};
+        var x = game.world.width/2, y = game.world.height/2;
+        var loadingText = this.game.add.text(x, 100, "Loading...", fontStyle);
+        loadingText.anchor.setTo(0.5, 0.5);
+
         game.load.image('bg', 'src/assets/sprites/bg.png');
         game.load.image('cloud1', 'src/assets/sprites/cloud1.png');
         game.load.image('cloud2', 'src/assets/sprites/cloud2.png');
