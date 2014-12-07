@@ -7,6 +7,7 @@ Player = function(game) {
     this.mvRight = true;
     this.bulletTime = 0;
     this.shootingDisabled = false;
+    this.gameWinner = null;
 
 };
 
@@ -15,8 +16,6 @@ Player.prototype = {
     preload: function() {
 
         game.load.spritesheet('player', 'src/assets/sprites/playerSpritesheet.png', 28, 58, 20);
-        game.load.image('healthbar', 'src/assets/sprites/healthbar.png');
-        game.load.image('healthbarBg', 'src/assets/sprites/healthbarBg.png');
         game.load.image('playerBullet', 'src/assets/sprites/playerBullet.png');
 
     },
@@ -57,24 +56,25 @@ Player.prototype = {
     update: function() {
 
         this.sprite.body.velocity.x = 0;
+        if (this.gameWinner == null) {
+            // Input
+            if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+                this.moveLeft();
+                this.sprite.animations.play('playerWalking', 24, true);
+            } else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+                this.moveRight();
+                this.sprite.animations.play('playerWalking', 24, true);
+            } else if (game.input.activePointer.isDown) {
+                this.shoot();
+                this.sprite.animations.play('playerShooting', 24, true);
+            } else {
+                this.sprite.animations.stop();
+            }
 
-        // Input
-        if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-            this.moveLeft();
-            this.sprite.animations.play('playerWalking', 24, true);
-        } else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-            this.moveRight();
-            this.sprite.animations.play('playerWalking', 24, true);
-        } else if (game.input.activePointer.isDown) {
-            this.shoot();
-            this.sprite.animations.play('playerShooting', 24, true);
-        } else {
-            this.sprite.animations.stop();
+            this.healthbar.x = this.sprite.x;
+            this.healthbarBg.x = this.sprite.x;
+            this.healthbar.width = (this.hitPoints / 100) * this.healthbarWidth;
         }
-
-        this.healthbar.x = this.sprite.x;
-        this.healthbarBg.x = this.sprite.x;
-        this.healthbar.width = (this.hitPoints / 100) * this.healthbarWidth;
 
     },
 
@@ -112,7 +112,6 @@ Player.prototype = {
 
     },
 
-
     die: function() {
 
         this.shootingDisabled = true;
@@ -122,4 +121,10 @@ Player.prototype = {
 
     },
 
+
+    gameOver: function(winner) {
+
+        this.gameWinner = winner;
+
+    },
 };

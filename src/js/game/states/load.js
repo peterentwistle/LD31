@@ -2,18 +2,29 @@ var loadState = {
 
     preload: function() {
 
+        //  Set up the preloading bar
+        this.preloadOuter = this.add.sprite(game.width/2 - 100, game.height/2 + 100, 'healthbarBg');
+        this.preloadBar = this.add.sprite(game.width/2 - 100, game.height/2 + 100, 'healthbar');
+
+        this.preloadOuter.scale.x = 2.5;
+        this.preloadOuter.scale.y = 2.5;
+        this.preloadBar.scale.x = 2.5;
+        this.preloadBar.scale.y = 2.5;
+
+        this.load.setPreloadSprite(this.preloadBar);
+
         game.load.image('bg', 'src/assets/sprites/bg.png');
         game.load.image('cloud1', 'src/assets/sprites/cloud1.png');
         game.load.image('cloud2', 'src/assets/sprites/cloud2.png');
 
         // Set background colour
-        game.stage.backgroundColor = '#3399FF';
+        game.stage.backgroundColor = '#0D0D0D';
 
         // Preload all game assets
         player = new Player(game);
         player.preload();
 
-        enemy = new Enemy(game);
+        enemy = new Enemy(game, this.gameWinner);
         enemy.preload();
 
         bt1 = new Tower(game, 'blue', 1);
@@ -29,19 +40,19 @@ var loadState = {
         rt2.preload();
 
         game.load.image('test', 'src/assets/sprites/test.png');
+
     },
 
     create: function() {
-        // Animate the preload bar
 
-        //Add test image
-        //this.test = this.game.add.sprite(100, 300, 'test');
-        this.startMenu();
+        // Animate the preload bar
+        var tween = game.add.tween(this.preloadBar).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true);
+        tween.onComplete.add(this.startMenu, this);
+
     },
 
     startMenu: function() {
-        // Will start game menu
-        // starts main for now
-        this.game.state.start('main');
+        // Start game menu
+        this.game.state.start('menu');
     },
 };

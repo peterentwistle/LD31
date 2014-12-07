@@ -11,6 +11,7 @@ Enemy = function(game) {
     this.flag = false;
     this.lastHitTime = 0;
     this.shooting = false;
+    this.gameWinner = null;
 
 };
 
@@ -55,11 +56,13 @@ Enemy.prototype = {
     update: function() {
 
         // Controlled by AI
-        this.ai();
+        if (this.gameWinner == null) {
+            this.ai();
 
-        this.healthbar.x = this.sprite.x;
-        this.healthbarBg.x = this.sprite.x;
-        this.healthbar.width = (this.hitPoints / 100) * this.healthbarWidth;
+            this.healthbar.x = this.sprite.x;
+            this.healthbarBg.x = this.sprite.x;
+            this.healthbar.width = (this.hitPoints / 100) * this.healthbarWidth;
+        }
 
     },
 
@@ -167,6 +170,12 @@ Enemy.prototype = {
     playAnimation: function(animation) {
 
         this.sprite.animations.play(animation, 24, true);
+
+    },
+
+    gameOver: function(winner) {
+
+        this.gameWinner = winner;
 
     },
 

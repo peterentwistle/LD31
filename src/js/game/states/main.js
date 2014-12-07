@@ -2,6 +2,11 @@ var mainState = {
 
     create: function() {
 
+        this.gameWinner = null;
+
+        // Set background colour
+        game.stage.backgroundColor = '#3399FF';
+        
         this.background = game.add.tileSprite(0, 0, 1000, 560, 'bg');
 
         this.cloud1 = game.add.tileSprite(800, 100, 305, 101, 'cloud1');
@@ -66,6 +71,20 @@ var mainState = {
         rt2.update();
 
         this.clouds();
+
+        if (!bt1.sprite.alive || !player.sprite.alive) {
+            this.gameWinner = "Red";
+            this.gameOver();
+        }
+        if (!rt2.sprite.alive || !enemy.sprite.alive) {
+            this.gameWinner = "Blue";
+            this.gameOver();
+        }
+
+        if (this.gameWinner != null && game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+            this.restartGame();
+        }
+
     },
 
 
@@ -169,6 +188,40 @@ var mainState = {
             // Kill tower
             tower.die();
         }
+
+    },
+
+    gameOver: function() {
+
+        if (this.gameWinner == "Blue") {
+            gameOverText = game.add.text(game.width/2, game.height/2 - 200, "Game Over. You Won!", { font: "30px Arial", fill: "#000000" });
+        } else {
+            gameOverText = game.add.text(game.width/2, game.height/2 - 200, "Game Over. You Lost!", { font: "30px Arial", fill: "#000000" });
+        }
+
+        // Score text
+        scoreText = game.add.text(game.width/2, game.height/2 - 100, "Press 'R' to restart the game", { font: "20px Arial", fill: "#000000" });
+        scoreText.anchor.setTo(0.5, 0.5);
+
+        gameOverText.anchor.setTo(0.5, 0.5);
+
+        // Stop enemy animations and movement
+        enemy.gameOver(this.gameWinner);
+        enemy.sprite.animations.stop();
+        enemy.sprite.body.immovable = true;
+        enemy.sprite.body.velocity.x = 0;
+
+        // Stop player animations and movement
+        player.gameOver(this.gameWinner);
+        player.sprite.animations.stop();
+        player.sprite.body.immovable = true;
+        player.sprite.body.velocity.x = 0;
+
+    },
+
+    restartGame: function() {
+
+        game.state.start('load');
 
     },
 
