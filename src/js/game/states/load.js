@@ -3,6 +3,8 @@ var loadState = {
     preload: function() {
 
         game.load.image('bg', 'src/assets/sprites/bg.png');
+        game.load.image('cloud1', 'src/assets/sprites/cloud1.png');
+        game.load.image('cloud2', 'src/assets/sprites/cloud2.png');
 
         // Set background colour
         game.stage.backgroundColor = '#3399FF';

@@ -4,6 +4,9 @@ var mainState = {
 
         this.background = game.add.tileSprite(0, 0, 1000, 560, 'bg');
 
+        this.cloud1 = game.add.tileSprite(800, 100, 305, 101, 'cloud1');
+        this.cloud2 = game.add.tileSprite(400, 40, 272, 70, 'cloud2');
+
         // Set up physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -18,6 +21,14 @@ var mainState = {
 
         // Create an enemy
         enemy.create();
+
+        // Enable cloud physics
+        game.physics.arcade.enable(this.cloud1);
+        game.physics.arcade.enable(this.cloud2);
+
+        // Add cloud velocity
+        this.cloud1.body.velocity.x = -40;
+        this.cloud2.body.velocity.x = -40;
 
     },
 
@@ -53,6 +64,28 @@ var mainState = {
         bt2.update();
         rt1.update();
         rt2.update();
+
+        this.clouds();
+    },
+
+
+    clouds: function() {
+
+
+        if (this.cloud1.x < -this.cloud1.width) {
+            this.cloud1.x = this.randomNumber(1010, 2000);
+            this.cloud1.y = this.randomNumber(40, 150);
+        }
+
+        if (this.cloud2.x < -this.cloud2.width) {
+            this.cloud2.x = this.randomNumber(1010, 2000);
+            this.cloud2.y = this.randomNumber(40, 150);
+        }
+
+    },
+
+    randomNumber: function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
     playerCollidesWithEnemy: function() {
