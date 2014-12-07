@@ -45,4 +45,12 @@ Tower.prototype = {
 
     },
 
+    die: function() {
+
+        this.sprite.kill();
+        //this.healthbarBg.kill();
+        //this.healthbar.kill();
+
+    },
+
 };

@@ -6,6 +6,10 @@ Enemy = function(game) {
     this.count = 0;
     this.timeCheck = game.time.now;
     this.bulletTime = 0;
+    this.mvLeft = true;
+    this.aiTime = 0;
+    this.flag = false;
+    this.lastHitTime = 0;
 
 };
 
@@ -48,12 +52,8 @@ Enemy.prototype = {
 
     update: function() {
 
-        //this.sprite.body.velocity.x = 0;
-
-        // Will be controlled by AI
-        if (game.time.now - this.timeCheck > 2000) {
-            this.ai();
-        }
+        // Controlled by AI
+        this.ai();
 
         this.healthbar.x = this.sprite.x;
         this.healthbarBg.x = this.sprite.x;
@@ -63,7 +63,7 @@ Enemy.prototype = {
 
     moveLeft: function() {
 
-        if (!this.sprite.alive) {
+        if (!this.sprite.alive && !this.mvLeft) {
             return;
         }
         this.sprite.body.velocity.x -=250;
@@ -83,20 +83,46 @@ Enemy.prototype = {
 
         this.sprite.body.velocity.x = 0;
 
-        // Move bot to just past it's first tower
-        if (this.count < 90) {
+        if (game.time.now - this.lastHitTime < 500) {
+            this.moveRight();
+        } else if (game.time.now - this.lastHitTime > 2000 && this.lastHitTime!=0) {
             this.moveLeft();
-            this.count++;
-        }
+        } else {
+            if (!bt2.sprite.alive) {
 
-        if (this.count >= 90 && this.count < 200) {
-            this.shoot();
-            this.count++;
-        }
+                if (!this.flag){
+                    this.resetTime();
+                    this.flag = true;
+                }
 
+                if (game.time.now - this.timeCheck > 500) {
+                    this.moveLeft();
+                }
+                if (game.time.now - this.timeCheck > 1500) {
+                    this.shoot();
+                }
+                if (game.time.now - this.timeCheck > 1500) {
+                    this.moveRight();
+                }
+
+            } else {
+
+                if (game.time.now - this.timeCheck > 2000) {
+                    this.moveLeft();
+                }
+                if (game.time.now - this.timeCheck > 3000) {
+                    this.shoot();
+                }
+                if (game.time.now - this.timeCheck > 3000) {
+                    this.moveRight();
+                }
+            }
+
+        }
     },
 
     shoot: function() {
+
         if (game.time.now > this.bulletTime) {
             this.bullet = this.bullets.getFirstExists(false);
 
@@ -106,13 +132,22 @@ Enemy.prototype = {
                 this.bulletTime = game.time.now + 200;
             }
         }
+
+    },
+
+    resetTime: function() {
+
+        this.timeCheck = game.time.now;
+
     },
 
 
     die: function() {
+
         this.sprite.kill();
         this.healthbarBg.kill();
         this.healthbar.kill();
+
     },
 
 };

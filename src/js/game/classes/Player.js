@@ -56,7 +56,7 @@ Player.prototype = {
         // Input
         if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.moveLeft();
-        } else if (game.input.keyboard.isDown(Phaser.Keyboard.D) && this.mvRight) {
+        } else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) {
             this.moveRight();
         }
 
@@ -81,7 +81,7 @@ Player.prototype = {
 
     moveRight: function() {
 
-        if (!this.sprite.alive) {
+        if (!this.sprite.alive && !this.mvRight) {
             return;
         }
         this.sprite.body.velocity.x +=250;
@@ -104,9 +104,11 @@ Player.prototype = {
 
 
     die: function() {
+
         this.sprite.kill();
         this.healthbarBg.kill();
         this.healthbar.kill();
+
     },
 
 };
