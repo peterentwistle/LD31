@@ -112,13 +112,13 @@ Enemy.prototype = {
 
             } else {
 
-                if (game.time.now - this.timeCheck > 2000 && !this.shooting) {
+                if (game.time.now - this.timeCheck > 7000 && !this.shooting) {
                     this.moveLeft();
                 }
-                if (game.time.now - this.timeCheck > 3000) {
+                if (game.time.now - this.timeCheck > 8000) {
                     this.shoot();
                 }
-                if (game.time.now - this.timeCheck > 3000 && !this.shooting) {
+                if (game.time.now - this.timeCheck > 8000 && !this.shooting) {
                     this.moveRight();
                 }
             }

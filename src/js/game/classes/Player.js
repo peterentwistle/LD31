@@ -6,6 +6,7 @@ Player = function(game) {
     this.hitPoints = 100;
     this.mvRight = true;
     this.bulletTime = 0;
+    this.shootingDisabled = false;
 
 };
 
@@ -38,9 +39,6 @@ Player.prototype = {
         // Add player animations
         this.sprite.animations.add('playerWalking', [0,1,2,3,4,5,6,7,8,9,10,11,12,13]);
         this.sprite.animations.add('playerShooting', [15,16,17,18,19]);
-
-
-
 
         // Add health bar
         this.healthbarBg = game.add.sprite(this.sprite.x, this.sprite.y-20, 'healthbarBg');
@@ -100,7 +98,7 @@ Player.prototype = {
 
     shoot: function() {
 
-        if (game.time.now > this.bulletTime) {
+        if (game.time.now > this.bulletTime && !this.shootingDisabled) {
             this.bullet = this.bullets.getFirstExists(false);
 
             if (this.bullet) {
@@ -117,6 +115,7 @@ Player.prototype = {
 
     die: function() {
 
+        this.shootingDisabled = true;
         this.sprite.kill();
         this.healthbarBg.kill();
         this.healthbar.kill();
