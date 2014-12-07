@@ -10,6 +10,7 @@ Enemy = function(game) {
     this.aiTime = 0;
     this.flag = false;
     this.lastHitTime = 0;
+    this.shooting = false;
 
 };
 
@@ -17,7 +18,7 @@ Enemy.prototype = {
 
     preload: function() {
 
-        game.load.image('enemy', 'src/assets/sprites/enemy.png');
+        game.load.spritesheet('enemy', 'src/assets/sprites/enemySpritesheet.png', 28, 58, 20);
         game.load.image('enemyBullet', 'src/assets/sprites/enemyBullet.png');
 
     },
@@ -36,6 +37,8 @@ Enemy.prototype = {
 
         // Add enemy sprite
         this.sprite = game.add.sprite(900, 392, 'enemy');
+        this.sprite.animations.add('enemyWalking', [0,1,2,3,4,5,6,7,8,9,10,11,12,13]);
+        this.sprite.animations.add('enemyShooting', [15,16,17,18,19]);
 
         this.healthbarBg = game.add.sprite(this.sprite.x, this.sprite.y-20, 'healthbarBg');
         this.healthbar = game.add.sprite(this.sprite.x, this.sprite.y-20, 'healthbar');
@@ -45,7 +48,6 @@ Enemy.prototype = {
 
         game.physics.arcade.enable(this.sprite);
 
-        //this.sprite.body.gravity.y = 20;
         this.sprite.body.collideWorldBounds = true;
 
     },
@@ -63,19 +65,21 @@ Enemy.prototype = {
 
     moveLeft: function() {
 
-        if (!this.sprite.alive && !this.mvLeft) {
+        if (!this.sprite.alive && !this.mvLeft && this.shooting) {
             return;
         }
         this.sprite.body.velocity.x -=250;
+        this.playAnimation('enemyWalking');
 
     },
 
     moveRight: function() {
 
-        if (!this.sprite.alive) {
+        if (!this.sprite.alive && this.shooting) {
             return;
         }
         this.sprite.body.velocity.x +=250;
+        this.playAnimation('enemyWalking');
 
     },
 
@@ -85,7 +89,7 @@ Enemy.prototype = {
 
         if (game.time.now - this.lastHitTime < 500) {
             this.moveRight();
-        } else if (game.time.now - this.lastHitTime > 2000 && this.lastHitTime!=0) {
+        } else if (game.time.now - this.lastHitTime > 2000 && this.lastHitTime!=0 && this.sprite.x - player.sprite.x > 200) {
             this.moveLeft();
         } else {
             if (!bt2.sprite.alive) {
@@ -93,35 +97,39 @@ Enemy.prototype = {
                 if (!this.flag){
                     this.resetTime();
                     this.flag = true;
+                    this.shooting = false;
                 }
 
-                if (game.time.now - this.timeCheck > 500) {
+                if (game.time.now - this.timeCheck > 500 && !this.shooting) {
                     this.moveLeft();
                 }
                 if (game.time.now - this.timeCheck > 1500) {
                     this.shoot();
                 }
-                if (game.time.now - this.timeCheck > 1500) {
+                if (game.time.now - this.timeCheck > 1500 && !this.shooting) {
                     this.moveRight();
                 }
 
             } else {
 
-                if (game.time.now - this.timeCheck > 2000) {
+                if (game.time.now - this.timeCheck > 2000 && !this.shooting) {
                     this.moveLeft();
                 }
                 if (game.time.now - this.timeCheck > 3000) {
                     this.shoot();
                 }
-                if (game.time.now - this.timeCheck > 3000) {
+                if (game.time.now - this.timeCheck > 3000 && !this.shooting) {
                     this.moveRight();
                 }
             }
-
         }
+
     },
 
     shoot: function() {
+
+        this.shooting = true;
+        this.playAnimation('enemyShooting');
 
         if (game.time.now > this.bulletTime) {
             this.bullet = this.bullets.getFirstExists(false);
@@ -147,6 +155,18 @@ Enemy.prototype = {
         this.sprite.kill();
         this.healthbarBg.kill();
         this.healthbar.kill();
+
+    },
+
+    stopAnimation: function(animation) {
+
+        this.sprite.animations.stop(animation, true);
+
+    },
+
+    playAnimation: function(animation) {
+
+        this.sprite.animations.play(animation, 24, true);
 
     },
 

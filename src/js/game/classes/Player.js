@@ -13,7 +13,7 @@ Player.prototype = {
 
     preload: function() {
 
-        game.load.image('player', 'src/assets/sprites/player.png');
+        game.load.spritesheet('player', 'src/assets/sprites/playerSpritesheet.png', 28, 58, 20);
         game.load.image('healthbar', 'src/assets/sprites/healthbar.png');
         game.load.image('healthbarBg', 'src/assets/sprites/healthbarBg.png');
         game.load.image('playerBullet', 'src/assets/sprites/playerBullet.png');
@@ -32,8 +32,15 @@ Player.prototype = {
         this.bullets.setAll('outOfBoundsKill', true);
         this.bullets.setAll('checkWorldBounds', true);
 
-        // Add player sprite
+        // Add player spritesheet
         this.sprite = game.add.sprite(100, 392, 'player');
+
+        // Add player animations
+        this.sprite.animations.add('playerWalking', [0,1,2,3,4,5,6,7,8,9,10,11,12,13]);
+        this.sprite.animations.add('playerShooting', [15,16,17,18,19]);
+
+
+
 
         // Add health bar
         this.healthbarBg = game.add.sprite(this.sprite.x, this.sprite.y-20, 'healthbarBg');
@@ -56,12 +63,15 @@ Player.prototype = {
         // Input
         if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.moveLeft();
+            this.sprite.animations.play('playerWalking', 24, true);
         } else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) {
             this.moveRight();
-        }
-
-        if (game.input.activePointer.isDown) {
+            this.sprite.animations.play('playerWalking', 24, true);
+        } else if (game.input.activePointer.isDown) {
             this.shoot();
+            this.sprite.animations.play('playerShooting', 24, true);
+        } else {
+            this.sprite.animations.stop();
         }
 
         this.healthbar.x = this.sprite.x;
@@ -97,6 +107,8 @@ Player.prototype = {
                 this.bullet.reset(this.sprite.x + this.sprite.width/2, this.sprite.y + this.sprite.height/2);
                 this.bullet.body.velocity.x = 400;
                 this.bulletTime = game.time.now + 200;
+            } else {
+                this.sprite.animations.stop();
             }
         }
 
