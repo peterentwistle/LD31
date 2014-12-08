@@ -9,7 +9,7 @@ var menuState = {
         var x = game.world.width/2, y = game.world.height/2;
 
         // Add text and center on screen
-        var gameNameText = this.game.add.text(x, 100, "Entire Game on One Screen", fontStyle);
+        var gameNameText = this.game.add.text(x, 100, "2 Towers", fontStyle);
         gameNameText.anchor.setTo(0.5, 0.5);
 
         var startText = this.game.add.text(x, y, "Press left mouse button to start", fontStyle2);
