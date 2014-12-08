@@ -22,6 +22,8 @@ var loadState = {
         game.load.image('bg', 'src/assets/sprites/bg.png');
         game.load.image('cloud1', 'src/assets/sprites/cloud1.png');
         game.load.image('cloud2', 'src/assets/sprites/cloud2.png');
+        game.load.audio('hurt', 'src/assets/audio/hurt.wav');
+        game.load.audio('song', 'src/assets/audio/song.mp3');
 
         // Set background colour
         game.stage.backgroundColor = '#0D0D0D';

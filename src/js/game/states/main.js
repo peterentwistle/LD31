@@ -6,7 +6,7 @@ var mainState = {
 
         // Set background colour
         game.stage.backgroundColor = '#3399FF';
-        
+
         this.background = game.add.tileSprite(0, 0, 1000, 560, 'bg');
 
         this.cloud1 = game.add.tileSprite(800, 100, 305, 101, 'cloud1');
@@ -34,6 +34,12 @@ var mainState = {
         // Add cloud velocity
         this.cloud1.body.velocity.x = -40;
         this.cloud2.body.velocity.x = -40;
+
+        // Game music
+        this.song = game.add.audio('song');
+        this.song.play('', 0, 1, true);
+
+        enemy.started = true;
 
     },
 
@@ -132,6 +138,7 @@ var mainState = {
 
         if (enemy.hitPoints > 0) {
             enemy.hitPoints -= 2;
+            enemy.hurtSound.play();
             enemy.lastHitTime = game.time.now;
         } else {
             // Kill enemy
@@ -145,6 +152,7 @@ var mainState = {
 
         if (player.hitPoints > 0) {
             player.hitPoints -= 2;
+            player.hurtSound.play();
         } else {
             // Kill enemy
             player.die();
@@ -217,11 +225,29 @@ var mainState = {
         player.sprite.body.immovable = true;
         player.sprite.body.velocity.x = 0;
 
+        this.song.stop();
+
     },
 
     restartGame: function() {
 
-        game.state.start('load');
+        // Set background colour
+        game.stage.backgroundColor = '#0D0D0D';
+
+        // Preload all game assets
+        player = new Player(game);
+
+        enemy = new Enemy(game, this.gameWinner);
+
+        bt1 = new Tower(game, 'blue', 1);
+
+        bt2 = new Tower(game, 'blue', 2);
+
+        rt1 = new Tower(game, 'red', 1);
+
+        rt2 = new Tower(game, 'red', 2);
+
+        game.state.start('menu');
 
     },
 

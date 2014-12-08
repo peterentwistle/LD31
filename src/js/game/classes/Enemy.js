@@ -4,7 +4,6 @@ Enemy = function(game) {
     this.sprite = null;
     this.hitPoints = 100;
     this.count = 0;
-    this.timeCheck = game.time.now;
     this.bulletTime = 0;
     this.mvLeft = true;
     this.aiTime = 0;
@@ -21,6 +20,7 @@ Enemy.prototype = {
 
         game.load.spritesheet('enemy', 'src/assets/sprites/enemySpritesheet.png', 28, 58, 20);
         game.load.image('enemyBullet', 'src/assets/sprites/enemyBullet.png');
+        game.load.audio('enemyShoot', 'src/assets/audio/enemyShoot.wav');
 
     },
 
@@ -49,8 +49,15 @@ Enemy.prototype = {
 
         game.physics.arcade.enable(this.sprite);
 
+        this.shootSound = game.add.audio('enemyShoot');
+        this.hurtSound = game.add.audio('hurt');
+
+        this.shootSound.volume = 0.3;
+        this.hurtSound.volume = 0.3;
+
         this.sprite.body.collideWorldBounds = true;
 
+        this.timeCheck = game.time.now;
     },
 
     update: function() {
@@ -115,13 +122,13 @@ Enemy.prototype = {
 
             } else {
 
-                if (game.time.now - this.timeCheck > 7000 && !this.shooting) {
+                if (game.time.now - this.timeCheck > 2000 && !this.shooting) {
                     this.moveLeft();
                 }
-                if (game.time.now - this.timeCheck > 8000) {
+                if (game.time.now - this.timeCheck > 3000) {
                     this.shoot();
                 }
-                if (game.time.now - this.timeCheck > 8000 && !this.shooting) {
+                if (game.time.now - this.timeCheck > 3000 && !this.shooting) {
                     this.moveRight();
                 }
             }
@@ -141,6 +148,9 @@ Enemy.prototype = {
                 this.bullet.reset(this.sprite.x + this.sprite.width/2, this.sprite.y + this.sprite.height/2);
                 this.bullet.body.velocity.x = -400;
                 this.bulletTime = game.time.now + 200;
+
+                // Play shoot sound
+                this.shootSound.play();
             }
         }
 

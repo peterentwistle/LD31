@@ -17,6 +17,7 @@ Player.prototype = {
 
         game.load.spritesheet('player', 'src/assets/sprites/playerSpritesheet.png', 28, 58, 20);
         game.load.image('playerBullet', 'src/assets/sprites/playerBullet.png');
+        game.load.audio('shoot', 'src/assets/audio/shoot.wav');
 
     },
 
@@ -47,6 +48,12 @@ Player.prototype = {
         this.healthbar.cropEnabled = true;
 
         game.physics.arcade.enable(this.sprite);
+
+        this.shootSound = game.add.audio('shoot');
+        this.hurtSound = game.add.audio('hurt');
+
+        this.shootSound.volume = 0.3;
+        this.hurtSound.volume = 0.3;
 
         //this.sprite.body.gravity.y = 20;
         this.sprite.body.collideWorldBounds = true;
@@ -105,6 +112,9 @@ Player.prototype = {
                 this.bullet.reset(this.sprite.x + this.sprite.width/2, this.sprite.y + this.sprite.height/2);
                 this.bullet.body.velocity.x = 400;
                 this.bulletTime = game.time.now + 200;
+
+                // Play shoot sound
+                this.shootSound.play();
             } else {
                 this.sprite.animations.stop();
             }

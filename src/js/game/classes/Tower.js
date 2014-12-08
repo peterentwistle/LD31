@@ -13,6 +13,7 @@ Tower.prototype = {
     preload: function() {
 
         game.load.image('tower', 'src/assets/sprites/tower.png');
+        game.load.audio('explosion', 'src/assets/audio/explosion.wav');
 
     },
 
@@ -47,6 +48,8 @@ Tower.prototype = {
 
         this.sprite.body.immovable = true;
 
+        this.explosion = game.add.audio('explosion');
+
         this.sprite.body.collideWorldBounds = true;
 
     },
@@ -58,6 +61,9 @@ Tower.prototype = {
     },
 
     die: function() {
+
+        // Play explosion sound
+        this.explosion.play();
 
         this.sprite.kill();
         this.healthbarBg.kill();
